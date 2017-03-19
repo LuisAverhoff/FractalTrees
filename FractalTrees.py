@@ -11,7 +11,9 @@ TREE_DEPTH = rand.randint(10, 13)
 SIN_MEMOIZED_VALUES = {}
 COS_MEMOIZED_VALUES = {}
 
-BRANCH_COLOUR = (101, 67, 33,  33, 67, 101) # Change this RGB color to your liking to create BEAUTIFUL color trees.
+# Change these RGB color to your liking to create BEAUTIFUL colored trees.
+BRANCH_COLOUR = (101, 67, 33,  101, 67, 33)
+BRANCH_LEAF_COLUR = (0, 100, 0, 0, 100, 0)
 
 def memoizedSin(degree):
     if degree not in SIN_MEMOIZED_VALUES:
@@ -29,19 +31,19 @@ def rotateVector(vector, degree):
     return np.matmul(vector, [[cosAlpha, -sinAlpha], [sinAlpha ,cosAlpha]]) # Rotational counter-clockwise matrix
 
 class Branch:
-    def __init__(self, begin, end):
+    def __init__(self, begin, end, color):
         self.begin = np.array(begin)
         self.end = np.array(end)
         self.vertices = pyglet.graphics.vertex_list(2, ('v2f', (self.begin[0], self.begin[1], self.end[0] ,self.end[1])),
-                                                       ('c3B', BRANCH_COLOUR)
+                                                       ('c3B', color)
                                                     )
 
-    def branch(self, degree):
+    def branch(self, degree, color):
         dir = self.end - self.begin
         dir = rotateVector(dir, degree);
         dir = dir * AMOUNT_TO_SHRINK
         newEnd = self.end + dir
-        branch = Branch(self.end, newEnd)
+        branch = Branch(self.end, newEnd, color)
         return branch
 
     def displayBranch(self):
@@ -51,8 +53,7 @@ class Branch:
 class FractalTree:
     def __init__(self, height):
         self.branches = []
-        self.leaves = []
-        self.branches.append(Branch([0, -(height / height)], [0, 0]))
+        self.branches.append(Branch([0, -(height / height)], [0, 0], BRANCH_COLOUR))
 
     def createTree(self):
         totalBranchesToVisit = int(pow(2, TREE_DEPTH - 1)) - 1
@@ -60,10 +61,15 @@ class FractalTree:
  
         while(currBranchIndex < totalBranchesToVisit):
                 degree = rand.randrange(30, 61)
-                self.branches.append(self.branches[currBranchIndex].branch(-degree))
-                self.branches.append(self.branches[currBranchIndex].branch(degree))
+                self.branches.append(self.branches[currBranchIndex].branch(-degree, BRANCH_COLOUR))
+                self.branches.append(self.branches[currBranchIndex].branch(degree, BRANCH_COLOUR))
                 currBranchIndex += 1
-            
+
+        totalBranches = len(self.branches)
+        
+        for branchIndex in range(currBranchIndex, totalBranches):
+            self.branches[branchIndex].vertices.colors = BRANCH_LEAF_COLUR
+
     def displayTree(self):
         for branch in self.branches:
             branch.displayBranch()
