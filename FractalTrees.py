@@ -6,7 +6,7 @@ from pyglet.gl import *
 AMOUNT_TO_SHRINK = rand.uniform(0.50, 0.75)
 # Becareful of setting this too high as it will take longer to create the tree the higher you put it.
 # At values higher than 15(2^15 branches) is where you will notice this and it will probably hang for quite some time.
-TREE_DEPTH = 13
+TREE_DEPTH = rand.randint(10, 13)
 
 SIN_MEMOIZED_VALUES = {}
 COS_MEMOIZED_VALUES = {}
