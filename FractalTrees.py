@@ -106,7 +106,7 @@ class Window(pyglet.window.Window):
                 totalBranches = len(self.tree.branches)
 
                 for branchIndex in range(self.tree.currBranchIndex, totalBranches):
-                    self.branches[branchIndex].vertices.colors = BRANCH_LEAF_COLUR
+                    self.tree.branches[branchIndex].vertices.colors = BRANCH_LEAF_COLUR
 
     def on_resize(self, width, height):
         glViewport(0, 0, width, height)
